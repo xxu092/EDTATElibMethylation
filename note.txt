@@ -1,0 +1,9 @@
+#filter out the ones with parent 
+grep -v "Parent" M.cicadina.TElib.gff3 > M.cicadina.TElib.clean.gff3
+
+intersect TE lib with all CpG
+intersect TE lib with all CpG >20% methylation
+
+head to R make the big table for all the TE instance
+
+analyze LINE families
