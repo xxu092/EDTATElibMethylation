@@ -1,9 +1,17 @@
-#filter out the ones with parent 
+#in gff3 file, structrually intact TEs are represented as several records, just keep one record with whole length for these elements, filter out the ones with parent 
 grep -v "Parent" M.cicadina.TElib.gff3 > M.cicadina.TElib.clean.gff3
 
-intersect TE lib with all CpG
-intersect TE lib with all CpG >20% methylation
+#intersect TE lib with all CpG sites
+script: bed_c.all.sh#
 
-head to R make the big table for all the TE instance
+#filter methylation bed file, >20% confidence in methylation count as positively methylated
+awk '$11 >= 20 {print}' new.con.5mc.bed > new.con.5mc.20.bed
+
+#intersect TE lib with only positively methylated CpG sites 
+script: bed_c20.sh
+
+#head to R make the big table for all the TE instance
+script: TEmethylsummary.R
 
 analyze LINE families
+script: LINE/LINEsummary.R

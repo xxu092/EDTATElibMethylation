@@ -12,12 +12,13 @@ setwd("/bigdata/stajichlab/xxu092/M.cicadina/EDTATElibMethylation/")
 TEsummary <- read_tsv("TEmethylsummary.tsv", col_names = TRUE)
 LINE <- TEsummary %>% filter(TEsummary$TE_family == "LINE/unknown")
 
-#this mutates CGmethyl to 1 if per is >= 0.5, if not return 0
+#if 25% of Cs in CpG are methylated we consider that element methylated,this mutates CGmethyl to 1 if perc is >= 0.25, if not return 0
 LINE <- LINE %>% 
   mutate (CGmethyl = ifelse(perc >= 0.25, 1, 0))
 #replace NA with 0
 LINE$CGmethyl[is.na(LINE$CGmethyl)] <- 0
 
+#summarize by families, see how many elements in a family are methylated, add length information
 LINEfam<- LINE %>% group_by(TE_type) %>%
   summarize(counts = n(), 
             methylated_repeats = sum(CGmethyl),
